@@ -12,7 +12,12 @@ const elCaseStart = document.getElementById("caseStart");
 const elCaseEnd = document.getElementById("caseEnd");
 const elCaseChar = document.getElementById("caseChar");
 
-// ===== 경로 자동 대응 (GitHub Pages/로컬) =====
+const sortLength = document.getElementById("sortLength");
+const sortStart = document.getElementById("sortStart");
+const sortEnd = document.getElementById("sortEnd");
+const sortChar = document.getElementById("sortChar");
+
+// ===== 경로 자동 대응 =====
 function basePath() {
   const parts = location.pathname.split("/").filter(Boolean);
   const repo = parts[0];
@@ -74,11 +79,23 @@ function makeBar(canvasId, labels, values) {
     options: {
       indexAxis: "y",
       responsive: true,
-      maintainAspectRatio: false, // ⭐ 높이 CSS 적용되게
+      maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: { x: { beginAtZero: true } }
     }
   });
+}
+
+// ===== 정렬 함수 =====
+function sortPairs(pairs, mode) {
+  if (mode === "freq") {
+    return pairs.sort((a, b) => b[1] - a[1]); // 빈도순
+  } else {
+    return pairs.sort((a, b) => {
+      if (!isNaN(a[0]) && !isNaN(b[0])) return a[0] - b[0];
+      return a[0].localeCompare(b[0]);
+    }); // 문자순
+  }
 }
 
 function countMap(arr) {
@@ -96,35 +113,38 @@ function updateStats() {
   const endCase = elCaseEnd.checked;
   const charCase = elCaseChar.checked;
 
-  // 1️⃣ 글자수
+  // 글자수
   const lengths = db.map(n => includeSpace ? n.length : n.replace(/\s/g,"").length);
   const lenMap = countMap(lengths);
-  const lenPairs = Object.entries(lenMap).sort((a,b)=>a[0]-b[0]);
+  const lenPairs = sortPairs(Object.entries(lenMap), sortLength.value);
   makeBar("lengthChart", lenPairs.map(x=>x[0]), lenPairs.map(x=>x[1]));
 
-  // 2️⃣ 시작 대/소문자
+  // 시작 대/소문자
   const upper = db.filter(n => /^[A-Z]/.test(n)).length;
   const lower = db.filter(n => /^[a-z]/.test(n)).length;
   makeBar("caseChart", ["Uppercase", "Lowercase"], [upper, lower]);
 
-  // 3️⃣ 앞글자
+  // 앞글자
   const starts = db.map(n => startCase ? n[0] : n[0].toLowerCase());
   const startMap = countMap(starts);
-  makeBar("startChart", Object.keys(startMap), Object.values(startMap));
+  const startPairs = sortPairs(Object.entries(startMap), sortStart.value);
+  makeBar("startChart", startPairs.map(x=>x[0]), startPairs.map(x=>x[1]));
 
-  // 4️⃣ 뒷글자
+  // 뒷글자
   const ends = db.map(n => endCase ? n[n.length-1] : n[n.length-1].toLowerCase());
   const endMap = countMap(ends);
-  makeBar("endChart", Object.keys(endMap), Object.values(endMap));
+  const endPairs = sortPairs(Object.entries(endMap), sortEnd.value);
+  makeBar("endChart", endPairs.map(x=>x[0]), endPairs.map(x=>x[1]));
 
-  // 5️⃣ 글자 빈도
+  // 글자 빈도
   let chars = [];
   for (let n of db)
     for (let c of n.replace(/\s/g,""))
       chars.push(charCase ? c : c.toLowerCase());
 
   const charMap = countMap(chars);
-  makeBar("charChart", Object.keys(charMap), Object.values(charMap));
+  const charPairs = sortPairs(Object.entries(charMap), sortChar.value);
+  makeBar("charChart", charPairs.map(x=>x[0]), charPairs.map(x=>x[1]));
 }
 
 // 토글 이벤트
@@ -132,5 +152,10 @@ elSpaceToggle.addEventListener("change", updateStats);
 elCaseStart.addEventListener("change", updateStats);
 elCaseEnd.addEventListener("change", updateStats);
 elCaseChar.addEventListener("change", updateStats);
+
+sortLength.addEventListener("change", updateStats);
+sortStart.addEventListener("change", updateStats);
+sortEnd.addEventListener("change", updateStats);
+sortChar.addEventListener("change", updateStats);
 
 loadDB();
