@@ -1,7 +1,13 @@
 let db = [];
 
 async function loadDB() {
-  const res = await fetch("data/db/db_data.txt");
+  const res = await fetch("/GD-Extreme-DB/data/db/db_data.txt");
+
+  if (!res.ok) {
+    console.error("DB 로드 실패:", res.status);
+    return;
+  }
+
   const text = await res.text();
   db = text.split("\n").filter(x => x.length > 0);
 }
