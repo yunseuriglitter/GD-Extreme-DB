@@ -80,21 +80,17 @@ elPrefix.addEventListener("input", searchDB);
 elSuffix.addEventListener("input", searchDB);
 
 // ===== Charts =====
-function makeBar(canvasId, labels, values) {
-  const ctx = document.getElementById(canvasId);
-  if (!ctx) return;
+function makeBar(id, labels, data) {
+  if (charts[id]) charts[id].destroy();
 
-  if (charts[canvasId]) charts[canvasId].destroy();
-
-  charts[canvasId] = new Chart(ctx, {
-    type: "bar",
-    data: { labels, datasets: [{ data: values }] },
+  charts[id] = new Chart(document.getElementById(id), {
+    type: 'bar',
+    data: { labels, datasets: [{ data }] },
     options: {
-      indexAxis: "y",
-      plugins: {
-        legend: { display: false },
-        tooltip: { enabled: true }
-      },
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
       scales: { x: { beginAtZero: true } }
     }
   });
