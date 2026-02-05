@@ -80,21 +80,24 @@ function makeBar(canvasId, labels, values) {
       indexAxis: "y",
       responsive: true,
       maintainAspectRatio: false,
+      animation: false,
       plugins: { legend: { display: false } },
       scales: { x: { beginAtZero: true } }
     }
   });
 }
 
-// ===== 정렬 함수 =====
+// ===== 정렬 함수 (복사본 사용) =====
 function sortPairs(pairs, mode) {
+  const arr = [...pairs];
+
   if (mode === "freq") {
-    return pairs.sort((a, b) => b[1] - a[1]); // 빈도순
+    return arr.sort((a, b) => b[1] - a[1]); // 빈도순
   } else {
-    return pairs.sort((a, b) => {
+    return arr.sort((a, b) => {
       if (!isNaN(a[0]) && !isNaN(b[0])) return a[0] - b[0];
       return a[0].localeCompare(b[0]);
-    }); // 문자순
+    });
   }
 }
 
@@ -115,25 +118,22 @@ function updateStats() {
 
   // 글자수
   const lengths = db.map(n => includeSpace ? n.length : n.replace(/\s/g,"").length);
-  const lenMap = countMap(lengths);
-  const lenPairs = sortPairs(Object.entries(lenMap), sortLength.value);
+  const lenPairs = sortPairs(Object.entries(countMap(lengths)), sortLength.value);
   makeBar("lengthChart", lenPairs.map(x=>x[0]), lenPairs.map(x=>x[1]));
 
-  // 시작 대/소문자
+  // 시작 대소문자
   const upper = db.filter(n => /^[A-Z]/.test(n)).length;
   const lower = db.filter(n => /^[a-z]/.test(n)).length;
   makeBar("caseChart", ["Uppercase", "Lowercase"], [upper, lower]);
 
   // 앞글자
   const starts = db.map(n => startCase ? n[0] : n[0].toLowerCase());
-  const startMap = countMap(starts);
-  const startPairs = sortPairs(Object.entries(startMap), sortStart.value);
+  const startPairs = sortPairs(Object.entries(countMap(starts)), sortStart.value);
   makeBar("startChart", startPairs.map(x=>x[0]), startPairs.map(x=>x[1]));
 
   // 뒷글자
   const ends = db.map(n => endCase ? n[n.length-1] : n[n.length-1].toLowerCase());
-  const endMap = countMap(ends);
-  const endPairs = sortPairs(Object.entries(endMap), sortEnd.value);
+  const endPairs = sortPairs(Object.entries(countMap(ends)), sortEnd.value);
   makeBar("endChart", endPairs.map(x=>x[0]), endPairs.map(x=>x[1]));
 
   // 글자 빈도
@@ -142,12 +142,11 @@ function updateStats() {
     for (let c of n.replace(/\s/g,""))
       chars.push(charCase ? c : c.toLowerCase());
 
-  const charMap = countMap(chars);
-  const charPairs = sortPairs(Object.entries(charMap), sortChar.value);
+  const charPairs = sortPairs(Object.entries(countMap(chars)), sortChar.value);
   makeBar("charChart", charPairs.map(x=>x[0]), charPairs.map(x=>x[1]));
 }
 
-// 토글 이벤트
+// 토글 & 정렬 이벤트
 elSpaceToggle.addEventListener("change", updateStats);
 elCaseStart.addEventListener("change", updateStats);
 elCaseEnd.addEventListener("change", updateStats);
