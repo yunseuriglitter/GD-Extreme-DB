@@ -13,17 +13,19 @@ async function loadDB() {
 }
 
 function searchDB() {
-  const prefix = document.getElementById("prefix").value;
-  const suffix = document.getElementById("suffix").value;
+  const prefix = document.getElementById("prefix").value.trim();
+  const suffix = document.getElementById("suffix").value.trim();
 
   if (!prefix && !suffix) {
     document.getElementById("results").textContent = "Type to search...";
     return;
   }
 
-  const results = db.filter(name =>
-    name.startsWith(prefix) && name.endsWith(suffix)
-  );
+  const results = db.filter(name => {
+    if (prefix && !name.startsWith(prefix)) return false;
+    if (suffix && !name.endsWith(suffix)) return false;
+    return true;
+  });
 
   document.getElementById("results").textContent =
     results.length ? results.join("\n") : "No match found.";
