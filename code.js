@@ -13,8 +13,8 @@ async function loadDB() {
 }
 
 function searchDB() {
-  const prefix = document.getElementById("prefix").value.trim();
-  const suffix = document.getElementById("suffix").value.trim();
+  const prefix = document.getElementById("prefix").value.trim().toLowerCase();
+  const suffix = document.getElementById("suffix").value.trim().toLowerCase();
 
   if (!prefix && !suffix) {
     document.getElementById("results").textContent = "Type to search...";
@@ -22,8 +22,11 @@ function searchDB() {
   }
 
   const results = db.filter(name => {
-    if (prefix && !name.startsWith(prefix)) return false;
-    if (suffix && !name.endsWith(suffix)) return false;
+    const lowerName = name.toLowerCase();
+
+    if (prefix && !lowerName.startsWith(prefix)) return false;
+    if (suffix && !lowerName.endsWith(suffix)) return false;
+
     return true;
   });
 
