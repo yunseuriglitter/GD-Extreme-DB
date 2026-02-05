@@ -4,7 +4,7 @@ async function loadDB() {
   const res = await fetch("/GD-Extreme-DB/data/db/db_data.txt");
 
   if (!res.ok) {
-    console.error("DB 로드 실패:", res.status);
+    document.getElementById("results").textContent = "DB load failed.";
     return;
   }
 
@@ -16,16 +16,17 @@ function searchDB() {
   const prefix = document.getElementById("prefix").value;
   const suffix = document.getElementById("suffix").value;
 
-  let results = db.filter(name =>
+  if (!prefix && !suffix) {
+    document.getElementById("results").textContent = "Type to search...";
+    return;
+  }
+
+  const results = db.filter(name =>
     name.startsWith(prefix) && name.endsWith(suffix)
   );
-
-  // 오름차순 정렬
-  results.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
 
   document.getElementById("results").textContent =
     results.length ? results.join("\n") : "No match found.";
 }
 
 loadDB();
-
