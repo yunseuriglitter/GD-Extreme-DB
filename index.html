@@ -24,9 +24,7 @@ body {
   margin-bottom: 28px;
 }
 
-h3 {
-  margin-top: 0;
-}
+h3 { margin-top: 0; }
 
 .toggle {
   font-size: 13px;
@@ -43,7 +41,7 @@ h3 {
 }
 
 canvas {
-  height: 700px !important;   /* 그래프 세로 크게 */
+  height: 1200px !important;   /* 그래프 세로 길이 */
 }
 </style>
 </head>
@@ -63,6 +61,11 @@ canvas {
   <div class="box">
     <div class="toggle">
       글자수 (공백 포함 <input type="checkbox" id="spaceToggle" checked>)
+      정렬:
+      <select id="sortLength">
+        <option value="char">길이순</option>
+        <option value="freq">빈도순</option>
+      </select>
     </div>
     <canvas id="lengthChart"></canvas>
   </div>
@@ -77,6 +80,11 @@ canvas {
   <div class="box">
     <div class="toggle">
       앞글자 (대소문자 구분 <input type="checkbox" id="caseStart">)
+      정렬:
+      <select id="sortStart">
+        <option value="char">문자순</option>
+        <option value="freq">빈도순</option>
+      </select>
     </div>
     <canvas id="startChart"></canvas>
   </div>
@@ -85,6 +93,11 @@ canvas {
   <div class="box">
     <div class="toggle">
       뒷글자 (대소문자 구분 <input type="checkbox" id="caseEnd">)
+      정렬:
+      <select id="sortEnd">
+        <option value="char">문자순</option>
+        <option value="freq">빈도순</option>
+      </select>
     </div>
     <canvas id="endChart"></canvas>
   </div>
@@ -93,6 +106,11 @@ canvas {
   <div class="box">
     <div class="toggle">
       글자 빈도 (대소문자 구분 <input type="checkbox" id="caseChar">)
+      정렬:
+      <select id="sortChar">
+        <option value="char">문자순</option>
+        <option value="freq">빈도순</option>
+      </select>
     </div>
     <canvas id="charChart"></canvas>
   </div>
