@@ -2,30 +2,62 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>GD DB Analyzer</title>
+<title>GD Extreme DB Analyzer</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-  body { font-family: Arial; margin: 20px; }
-  .wrapper { display: flex; gap: 30px; align-items: flex-start; }
+body { font-family: Arial, sans-serif; margin: 20px; background:#fafafa; }
 
-  .dictionary { width: 360px; }
-  .stats { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.wrapper {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+}
 
-  .box { border: 1px solid #ccc; padding: 10px; }
-  canvas { height: 220px !important; }
+.dictionary { width: 360px; }
 
-  .toggle { font-size: 13px; margin-bottom: 6px; }
-  #results { height: 260px; overflow-y: scroll; border:1px solid #ccc; padding:8px; white-space: pre-line; }
+.stats {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.box {
+  border: 1px solid #ccc;
+  padding: 12px;
+  background: white;
+}
+
+canvas {
+  height: 600px !important;   /* 🔥 그래프 세로 크게 */
+}
+
+.toggle {
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+#results {
+  height: 260px;
+  overflow-y: scroll;
+  border: 1px solid #ccc;
+  padding: 8px;
+  white-space: pre-line;
+  margin-top: 10px;
+}
+
+h3 { margin-top:0; }
 </style>
 </head>
 
 <body>
+
 <div class="wrapper">
 
   <!-- 📖 사전 -->
   <div class="dictionary box">
-    <h3>Dictionary</h3>
+    <h3>사전</h3>
     Prefix <input id="prefix" maxlength="2">
     Suffix <input id="suffix" maxlength="2">
     <div id="results">Loading DB...</div>
@@ -34,6 +66,7 @@
   <!-- 📊 통계 -->
   <div class="stats">
 
+    <!-- 1줄 -->
     <div class="box">
       <div class="toggle">
         글자수 (공백 포함 <input type="checkbox" id="spaceToggle" checked>)
@@ -41,6 +74,12 @@
       <canvas id="lengthChart"></canvas>
     </div>
 
+    <div class="box">
+      <div class="toggle">시작 대문자 vs 소문자</div>
+      <canvas id="caseChart"></canvas>
+    </div>
+
+    <!-- 2줄 -->
     <div class="box">
       <div class="toggle">
         앞글자 (대소문자 구분 <input type="checkbox" id="caseStart">)
@@ -55,12 +94,8 @@
       <canvas id="endChart"></canvas>
     </div>
 
-    <div class="box">
-      <div class="toggle">시작 대문자 vs 소문자</div>
-      <canvas id="caseChart"></canvas>
-    </div>
-
-    <div class="box">
+    <!-- 마지막 줄 -->
+    <div class="box" style="grid-column: 1 / span 2;">
       <div class="toggle">
         글자 빈도 (대소문자 구분 <input type="checkbox" id="caseChar">)
       </div>
