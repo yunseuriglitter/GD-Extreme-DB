@@ -1,74 +1,75 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>GD Extreme Dictionary</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 30px;
-    }
+<meta charset="UTF-8">
+<title>GD DB Analyzer</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    .container {
-      width: 360px;   /* 작게 */
-    }
+<style>
+body { font-family: Arial; margin: 20px; }
+.wrapper { display: flex; gap: 30px; align-items: flex-start; }
 
-    h1 {
-      margin-bottom: 15px;
-    }
+.dictionary { width: 360px; }
+.stats { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 
-    .input-row {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 8px;
-    }
+.box { border: 1px solid #ccc; padding: 10px; }
+canvas { height: 220px !important; }
 
-    .input-group {
-      flex: 1;
-    }
-
-    label {
-      font-size: 14px;
-      color: #555;
-    }
-
-    input {
-      width: 100%;
-      padding: 6px;
-      font-size: 15px;
-    }
-
-    #results {
-      margin-top: 12px;
-      border: 1px solid #ccc;
-      height: 260px;
-      overflow-y: scroll;
-      padding: 8px;
-      white-space: pre-line;
-      font-size: 14px;
-      background: #fafafa;
-    }
-  </style>
+.toggle { font-size: 13px; margin-bottom: 6px; }
+#results { height: 260px; overflow-y: scroll; border:1px solid #ccc; padding:8px; white-space: pre-line; }
+</style>
 </head>
+
 <body>
+<div class="wrapper">
 
-  <div class="container">
-    <h1>Dictionary</h1>
-
-    <div class="input-row">
-      <div class="input-group">
-        <label>Prefix</label>
-        <input type="text" id="prefix" maxlength="2" oninput="searchDB()">
-      </div>
-      <div class="input-group">
-        <label>Suffix</label>
-        <input type="text" id="suffix" maxlength="2" oninput="searchDB()">
-      </div>
-    </div>
-
+  <!-- 📖 사전 -->
+  <div class="dictionary box">
+    <h3>Dictionary</h3>
+    Prefix <input id="prefix" maxlength="2" oninput="searchDB()">
+    Suffix <input id="suffix" maxlength="2" oninput="searchDB()">
     <div id="results">Type to search...</div>
   </div>
 
-  <script src="code.js"></script>
+  <!-- 📊 통계 -->
+  <div class="stats">
+
+    <div class="box">
+      <div class="toggle">
+        글자수 (공백 포함 <input type="checkbox" id="spaceToggle" checked onchange="updateStats()">)
+      </div>
+      <canvas id="lengthChart"></canvas>
+    </div>
+
+    <div class="box">
+      <div class="toggle">
+        앞글자 (대소문자 구분 <input type="checkbox" id="caseStart" onchange="updateStats()">)
+      </div>
+      <canvas id="startChart"></canvas>
+    </div>
+
+    <div class="box">
+      <div class="toggle">
+        뒷글자 (대소문자 구분 <input type="checkbox" id="caseEnd" onchange="updateStats()">)
+      </div>
+      <canvas id="endChart"></canvas>
+    </div>
+
+    <div class="box">
+      <div class="toggle">시작 대문자 vs 소문자</div>
+      <canvas id="caseChart"></canvas>
+    </div>
+
+    <div class="box">
+      <div class="toggle">
+        글자 빈도 (대소문자 구분 <input type="checkbox" id="caseChar" onchange="updateStats()">)
+      </div>
+      <canvas id="charChart"></canvas>
+    </div>
+
+  </div>
+</div>
+
+<script src="code.js"></script>
 </body>
 </html>
