@@ -1,1 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>GD Extreme Dictionary</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .input-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .input-group {
+      width: 48%;
+    }
+
+    input {
+      width: 100%;
+      padding: 6px;
+      font-size: 16px;
+    }
+
+    #results {
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      height: 300px;
+      overflow-y: scroll;
+      padding: 10px;
+      white-space: pre-line;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Dictionary</h1>
+
+    <div class="input-row">
+      <div class="input-group">
+        <label>Prefix</label>
+        <input type="text" id="prefix" maxlength="2" oninput="searchDB()">
+      </div>
+      <div class="input-group">
+        <label>Suffix</label>
+        <input type="text" id="suffix" maxlength="2" oninput="searchDB()">
+      </div>
+    </div>
+
+    <div id="results">검색 결과가 여기 표시됩니다.</div>
+  </div>
+
+  <script src="code.js"></script>
+</body>
+</html>
 
